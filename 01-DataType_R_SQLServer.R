@@ -46,7 +46,34 @@ mytable3 <- with(cust.data3, table(Nof,GROUPs))
 df3 <- data.frame(margin.table(mytable3,2))
 df3
 
+# Adding CharSet=utf8 to ROBDBC
+# no success
 
+sessionInfo()
 
+rm(cust.data, myconn)
 
+library(RODBC)
+#myconn <-odbcDriverConnect("driver={SQL Server};Server=SICN-00031\\SQLSERVER2016RC3;database=Adventureworks;trusted_connection=true;DBMSencoding=utf8")
+myconn <-odbcDriverConnect("driver={SQL Server};Server=SICN-00031\\SQLSERVER2016RC3;database=Adventureworks;trusted_connection=true")
+
+###|||||||||||||||||
+### I have created a table in SQL Server and stored data in table
+
+### CREATE TABLE chartest (Nof INT,GROUPs NVARCHAR(10))
+### INSERT INTO chartest
+### SELECT 1 AS Nof, 'D' AS GROUPs
+### UNION ALL SELECT 2 AS Nof, 'A' AS GROUPs
+### UNION ALL SELECT 3 AS Nof, 'A' AS GROUPs
+### UNION ALL SELECT 1 AS Nof, 'D' AS GROUPs
+### UNION ALL SELECT 3 AS Nof, 'È' AS GROUPs
+### UNION ALL SELECT 4 AS Nof, 'È' AS GROUPs
+###||||||||||||||||
+
+cust.data <- sqlQuery(myconn, "SELECT * FROM NQS.dbo.chartest")
+
+close(myconn) 
+
+#with no special definition of DBMSencoding, I see special characters
+cust.data
 
